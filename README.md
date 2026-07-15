@@ -1,39 +1,39 @@
-# ET-Hackthon
-AirWatch — Agentic Air Quality Intelligence Platform
+# AirWatch — Agentic Air Quality Intelligence Platform
 
-An agentic system that identifies who or what is causing a pollution spike —
+An agentic system that identifies **who or what is causing a pollution spike** —
 using physics, not just correlation — and turns that into a ranked, explainable
 enforcement recommendation and citizen alert, all coordinated by LLM-driven agents.
 
-Built for [Hackathon Name]. Core differentiator: physics-informed source
-attribution (Gaussian plume dispersion + ML classifier) feeding a multi-agent
-orchestration layer (LangGraph + Claude), instead of a dashboard bolted onto raw
+Built for [Hackathon Name]. Core differentiator: **physics-informed source
+attribution** (Gaussian plume dispersion + ML classifier) feeding a **multi-agent
+orchestration layer** (LangGraph + Claude), instead of a dashboard bolted onto raw
 sensor data.
 
+---
 
-Table of Contents
+## Table of Contents
 
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Running the Project](#running-the-project)
+- [API Reference](#api-reference)
+- [Data Sources](#data-sources)
+- [Roadmap / Stretch Features](#roadmap--stretch-features)
+- [License](#license)
 
-Overview
-Architecture
-Features
-Tech Stack
-Project Structure
-Getting Started
-Environment Variables
-Running the Project
-API Reference
-Data Sources
-Roadmap / Stretch Features
-License
+---
 
-
-
-Overview
+<a name="overview"></a>
+## Overview
 
 Most air quality tools stop at "here's the AQI right now." AirWatch goes further:
 when a pollution spike is detected, it works backward through wind data to identify
-which zone plausibly caused it, classifies the likely source category
+**which zone plausibly caused it**, classifies the **likely source category**
 (industrial / vehicular / construction / biomass burning), and hands that off to a
 chain of LLM-driven agents that generate a human-readable explanation and a ranked
 enforcement action — with an estimated health cost avoided.
@@ -42,8 +42,10 @@ The result is presented on a live map (animated plume visualization) alongside a
 transparent, step-by-step trace of every agent's reasoning, so the output isn't a
 black box.
 
-Architecture
+<a name="architecture"></a>
+## Architecture
 
+```
                     ┌─────────────────────────┐
                     │   Ground + Satellite     │
                     │   + Weather Data Layer   │
@@ -82,19 +84,44 @@ Architecture
                  │  • Animated plume map view       │
                  │  • Agent trace dashboard          │
                  └───────────────────────────────┘
+```
 
-Features
+<a name="features"></a>
+## Features
 
-#FeatureStatus1Physics-informed pollution source attribution (Gaussian plume + XGBoost classifier)Core — built2Multi-agent orchestration (LangGraph + Claude reasoning/enforcement agents)Core — built3Advanced UI: map-based plume visualization + agent trace dashboardCore — built4AQI monitoring with satellite gap-fill (Kriging/IDW + AOD)Roadmap5AQI forecasting with RMSE-vs-persistence benchmarkingRoadmap6Satellite anomaly detection (Isolation Forest on MODIS/Sentinel-5P)Roadmap7Digital twin map view (animated what-if scenario sliders)Roadmap8Citizen health risk personalizationRoadmap9Regional language advisories (Kannada/Tamil via Claude)Roadmap
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | Physics-informed pollution source attribution (Gaussian plume + XGBoost classifier) | **Core — built** |
+| 2 | Multi-agent orchestration (LangGraph + Claude reasoning/enforcement agents) | **Core — built** |
+| 3 | Advanced UI: map-based plume visualization + agent trace dashboard | **Core — built** |
+| 4 | AQI monitoring with satellite gap-fill (Kriging/IDW + AOD) | Roadmap |
+| 5 | AQI forecasting with RMSE-vs-persistence benchmarking | Roadmap |
+| 6 | Satellite anomaly detection (Isolation Forest on MODIS/Sentinel-5P) | Roadmap |
+| 7 | Digital twin map view (animated what-if scenario sliders) | Roadmap |
+| 8 | Citizen health risk personalization | Roadmap |
+| 9 | Regional language advisories (Kannada/Tamil via Claude) | Roadmap |
 
-See Roadmap for details on items not yet built.
+See [Roadmap](#roadmap--stretch-features) for details on items not yet built.
 
-Tech Stack
+<a name="tech-stack"></a>
+## Tech Stack
 
-LayerTechnologyFrontendReact, Tailwind CSS, Mapbox GL JSBackend/APIFastAPI (Python)Agent orchestrationLangGraphLLM reasoningClaude API (Sonnet)Attribution physicsNumPy / SciPy (Gaussian plume model)Attribution MLXGBoost / scikit-learn (calibrated classifier)Geospatial dataPostgreSQL + PostGIS, GeoPandasTime-series storageTimescaleDBExternal dataCPCB/data.gov.in (CAAQMS), IMD weather API, OpenStreetMap
+| Layer | Technology |
+|---|---|
+| Frontend | React, Tailwind CSS, Mapbox GL JS |
+| Backend/API | FastAPI (Python) |
+| Agent orchestration | LangGraph |
+| LLM reasoning | Claude API (Sonnet) |
+| Attribution physics | NumPy / SciPy (Gaussian plume model) |
+| Attribution ML | XGBoost / scikit-learn (calibrated classifier) |
+| Geospatial data | PostgreSQL + PostGIS, GeoPandas |
+| Time-series storage | TimescaleDB |
+| External data | CPCB/data.gov.in (CAAQMS), IMD weather API, OpenStreetMap |
 
-Project Structure
+<a name="project-structure"></a>
+## Project Structure
 
+```
 airwatch/
 ├── backend/
 │   ├── attribution/
@@ -124,23 +151,24 @@ airwatch/
 │   └── tailwind.config.js
 ├── .env.example
 └── README.md
+```
 
-Getting Started
+<a name="getting-started"></a>
+## Getting Started
 
-Prerequisites
+### Prerequisites
 
+- Python 3.10+
+- Node.js 18+
+- PostgreSQL 14+ with PostGIS extension
+- A Claude API key ([console.anthropic.com](https://console.anthropic.com))
+- (Optional, for live data) CPCB/data.gov.in API key, IMD API access, Google Earth
+  Engine service account
 
-Python 3.10+
-Node.js 18+
-PostgreSQL 14+ with PostGIS extension
-A Claude API key (console.anthropic.com)
-(Optional, for live data) CPCB/data.gov.in API key, IMD API access, Google Earth
-Engine service account
+### Installation
 
-
-Installation
-
-bash# Clone the repo
+```bash
+# Clone the repo
 git clone https://github.com/<your-org>/airwatch.git
 cd airwatch
 
@@ -153,12 +181,15 @@ pip install -r requirements.txt
 # Frontend setup
 cd ../frontend
 npm install
+```
 
-Environment Variables
+<a name="environment-variables"></a>
+## Environment Variables
 
-Copy .env.example to .env in both backend/ and frontend/ and fill in:
+Copy `.env.example` to `.env` in both `backend/` and `frontend/` and fill in:
 
-bash# backend/.env
+```bash
+# backend/.env
 ANTHROPIC_API_KEY=your_claude_api_key
 DATABASE_URL=postgresql://user:password@localhost:5432/airwatch
 USE_SYNTHETIC_DATA=true          # set false once live API keys are configured
@@ -168,37 +199,43 @@ IMD_API_KEY=                     # optional — leave blank to use sample data
 # frontend/.env
 VITE_MAPBOX_TOKEN=your_mapbox_token
 VITE_API_BASE_URL=http://localhost:8000
+```
 
-Running the Project
+<a name="running-the-project"></a>
+## Running the Project
 
-bash# Terminal 1 — backend
+```bash
+# Terminal 1 — backend
 cd backend
 uvicorn api.main:app --reload --port 8000
 
 # Terminal 2 — frontend
 cd frontend
 npm run dev
+```
 
-Open http://localhost:5173 to view the dashboard. With USE_SYNTHETIC_DATA=true,
+Open `http://localhost:5173` to view the dashboard. With `USE_SYNTHETIC_DATA=true`,
 the app runs fully on realistic sample data — no external API keys required to demo.
 
-API Reference
+<a name="api-reference"></a>
+## API Reference
 
-POST /analyze-spike
+### `POST /analyze-spike`
 
 Runs the full attribution → agent pipeline for a given location and timestamp.
 
-Request body:
-
-json{
+**Request body:**
+```json
+{
   "latitude": 12.9716,
   "longitude": 77.5946,
   "timestamp": "2026-07-15T09:00:00Z"
 }
+```
 
-Response:
-
-json{
+**Response:**
+```json
+{
   "attribution": {
     "candidates": [
       {
@@ -217,23 +254,33 @@ json{
     { "agent": "enforcement", "status": "done", "output": { "recommendation": "...", "health_cost_avoided_inr": 0 } }
   ]
 }
+```
 
-Data Sources
+<a name="data-sources"></a>
+## Data Sources
 
-SourceUsed forAccessCPCB CAAQMSGround-station AQIdata.gov.in APIIMDWind speed/directionIMD APIOpenStreetMapLand use, traffic, amenitiesOverpass APISample/synthetic dataDefault demo modeBundled in backend/data/sample/
+| Source | Used for | Access |
+|---|---|---|
+| CPCB CAAQMS | Ground-station AQI | [data.gov.in](https://data.gov.in) API |
+| IMD | Wind speed/direction | IMD API |
+| OpenStreetMap | Land use, traffic, amenities | Overpass API |
+| Sample/synthetic data | Default demo mode | Bundled in `backend/data/sample/` |
 
 If live keys aren't configured, the pipeline automatically falls back to bundled
 synthetic data with the same schema, so the demo always runs end-to-end.
 
-Roadmap / Stretch Features
+<a name="roadmap--stretch-features"></a>
+## Roadmap / Stretch Features
 
-The following were scoped in the original brief but are not part of this build —
+The following were scoped in the original brief but are **not** part of this build —
 listed here for transparency and future work:
 
+- AQI monitoring with satellite gap-fill (Kriging/IDW spatial interpolation)
+- AQI forecasting service with RMSE-vs-persistence benchmarking
+- Satellite anomaly detection (Isolation Forest on MODIS/Sentinel-5P)
+- Full digital-twin map view with animated what-if scenario sliders
+- Citizen health risk personalization and alerting
+- Regional language (Kannada/Tamil) advisories via Claude + IVR
 
-AQI monitoring with satellite gap-fill (Kriging/IDW spatial interpolation)
-AQI forecasting service with RMSE-vs-persistence benchmarking
-Satellite anomaly detection (Isolation Forest on MODIS/Sentinel-5P)
-Full digital-twin map view with animated what-if scenario sliders
-Citizen health risk personalization and alerting
-Regional language (Kannada/Tamil) advisories via Claude + IVR
+
+
